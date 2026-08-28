@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables (keep secrets out of the repo)
+.env
+.env.local
+.env.*.local

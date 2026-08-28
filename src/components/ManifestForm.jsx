@@ -1,5 +1,6 @@
 import { useState } from "react";
 import RouteDivider from "./RouteDivider";
+import LocationAutocomplete from "./LocationAutocomplete";
 
 const EMPTY_FORM = {
   containerName: "",
@@ -121,6 +122,15 @@ export default function ManifestForm({ onSave }) {
                     />
                     <span className="text-xs text-ink/50">MXN</span>
                   </label>
+                ) : field.name === "origen" || field.name === "destino" ? (
+                  <LocationAutocomplete
+                    id={field.name}
+                    name={field.name}
+                    value={value}
+                    placeholder={field.placeholder}
+                    error={showError}
+                    onChange={handleChange}
+                  />
                 ) : (
                   <input
                     id={field.name}
