@@ -22,13 +22,13 @@ const FIELD_META = [
   { name: "containerName", label: "Nombre del contenedor", type: "text", placeholder: "Ej. MSCU 123456-7", span: 1 },
   { name: "date", label: "Fecha de Salida", type: "date", span: 1 },
   { name: "company", label: "Nombre de la empresa", type: "text", placeholder: "Ej. Grupo Logístico del Bajío", span: 2 },
-  { name: "contact", label: "Contacto", type: "text", placeholder: "Nombre de quien solicita", span: 1 },
-  { name: "phone", label: "Teléfono", type: "tel", placeholder: "999 123 4567", span: 1 },
-  { name: "operator", label: "Operador", type: "text", placeholder: "Nombre del operador asignado", span: 1 },
-  { name: "plates", label: "Placas", type: "text", placeholder: "Ej. AB-123-C", span: 1 },
   { name: "origen", label: "Origen", type: "text", placeholder: "Ej. Ciudad de México", span: 1 },
   { name: "destino", label: "Destino", type: "text", placeholder: "Ej. Monterrey, NL", span: 1 },
-  { name: "rfc", label: "RFC", type: "text", placeholder: "Ej. ABC123456T1A", span: 2 },
+  { name: "contact", label: "Contacto", type: "text", placeholder: "Nombre de quien solicita", span: 1 },
+  { name: "phone", label: "Teléfono", type: "tel", placeholder: "999 123 4567", span: 1 },
+  { name: "plates", label: "Placas", type: "text", placeholder: "Ej. AB-123-C", span: 1 },
+  { name: "operator", label: "Operador", type: "text", placeholder: "Nombre del operador asignado", span: 1 },
+  { name: "rfc", label: "RFC (opcional)", type: "text", placeholder: "Ej. ABC123456T1A", span: 2 },
   { name: "term", label: "Plazo", type: "text", placeholder: "Ej. 3 días hábiles", span: 1 },
   { name: "cost", label: "Costo (MXN)", type: "number", placeholder: "0.00", span: 1 },
 ];
@@ -49,7 +49,10 @@ export default function ManifestForm({ onSave }) {
   function isValid() {
     return Object.entries(form).every(([key, value]) => {
       if (key === "cost") return String(value).trim() !== "" && Number(value) >= 0;
-      if (key === "rfc") return RFC_PATTERN.test(value.trim().toUpperCase());
+      if (key === "rfc") {
+        const rfcValue = value.trim().toUpperCase();
+        return rfcValue === "" || RFC_PATTERN.test(rfcValue);
+      }
       return String(value).trim() !== "";
     });
   }
@@ -85,7 +88,7 @@ export default function ManifestForm({ onSave }) {
             const value = form[field.name];
             const isEmpty = String(value).trim() === "";
             const rfcInvalid = field.name === "rfc" && !isEmpty && !RFC_PATTERN.test(value.trim().toUpperCase());
-            const showError = (touched && isEmpty) || rfcInvalid;
+            const showError = field.name === "rfc" ? rfcInvalid : touched && isEmpty;
             return (
               <div
                 key={field.name}
