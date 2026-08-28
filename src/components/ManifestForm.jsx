@@ -9,9 +9,14 @@ const EMPTY_FORM = {
   phone: "",
   operator: "",
   plates: "",
+  origen: "",
+  destino: "",
+  rfc: "",
   term: "",
   cost: "",
 };
+
+const RFC_PATTERN = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
 
 const FIELD_META = [
   { name: "containerName", label: "Nombre del contenedor", type: "text", placeholder: "Ej. MSCU 123456-7", span: 1 },
@@ -21,6 +26,9 @@ const FIELD_META = [
   { name: "phone", label: "Teléfono", type: "tel", placeholder: "999 123 4567", span: 1 },
   { name: "operator", label: "Operador", type: "text", placeholder: "Nombre del operador asignado", span: 1 },
   { name: "plates", label: "Placas", type: "text", placeholder: "Ej. AB-123-C", span: 1 },
+  { name: "origen", label: "Origen", type: "text", placeholder: "Ej. Ciudad de México", span: 1 },
+  { name: "destino", label: "Destino", type: "text", placeholder: "Ej. Monterrey, NL", span: 1 },
+  { name: "rfc", label: "RFC", type: "text", placeholder: "Ej. ABC123456T1A", span: 2 },
   { name: "term", label: "Plazo", type: "text", placeholder: "Ej. 3 días hábiles", span: 1 },
   { name: "cost", label: "Costo (MXN)", type: "number", placeholder: "0.00", span: 1 },
 ];
@@ -34,13 +42,14 @@ export default function ManifestForm({ onSave }) {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: name === "plates" ? value.toUpperCase() : value,
+      [name]: name === "plates" || name === "rfc" ? value.toUpperCase() : value,
     }));
   }
 
   function isValid() {
     return Object.entries(form).every(([key, value]) => {
       if (key === "cost") return String(value).trim() !== "" && Number(value) >= 0;
+      if (key === "rfc") return RFC_PATTERN.test(value.trim().toUpperCase());
       return String(value).trim() !== "";
     });
   }
@@ -74,7 +83,9 @@ export default function ManifestForm({ onSave }) {
         <div className="grid grid-cols-1 gap-x-6 gap-y-5 sm:grid-cols-2">
           {FIELD_META.map((field) => {
             const value = form[field.name];
-            const showError = touched && String(value).trim() === "";
+            const isEmpty = String(value).trim() === "";
+            const rfcInvalid = field.name === "rfc" && !isEmpty && !RFC_PATTERN.test(value.trim().toUpperCase());
+            const showError = (touched && isEmpty) || rfcInvalid;
             return (
               <div
                 key={field.name}
@@ -123,7 +134,9 @@ export default function ManifestForm({ onSave }) {
 
                 {showError && (
                   <span className="mt-1 block text-xs text-error">
-                    Este campo es obligatorio.
+                    {rfcInvalid
+                      ? "RFC inválido. Debe tener el formato correcto (3-4 letras, 6 dígitos y 3 caracteres finales)."
+                      : "Este campo es obligatorio."}
                   </span>
                 )}
               </div>

@@ -20,8 +20,33 @@ const DATA_ROWS = [
   { key: "phone", label: "Teléfono" },
   { key: "operator", label: "Operador" },
   { key: "plates", label: "Placas" },
+  { key: "rfc", label: "RFC" },
   { key: "term", label: "Plazo" },
 ];
+
+function RouteTracker({ origen, destino }) {
+  return (
+    <div className="mt-4 flex items-center gap-3">
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-navy text-white">
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
+        </svg>
+      </div>
+      <span className="max-w-[40%] truncate text-sm font-medium text-ink" title={origen}>
+        {origen}
+      </span>
+      <div className="relative h-px flex-1 bg-[repeating-linear-gradient(90deg,theme(colors.brandgreen.DEFAULT)_0,theme(colors.brandgreen.DEFAULT)_6px,transparent_6px,transparent_12px)]" />
+      <span className="max-w-[40%] truncate text-sm font-medium text-ink" title={destino}>
+        {destino}
+      </span>
+      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brandgreen text-navy">
+        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor" aria-hidden="true">
+          <path d="M6 2v20l7-4 7 4V2z" />
+        </svg>
+      </div>
+    </div>
+  );
+}
 
 export default function FolioCard({ folio, onDelete }) {
   return (
@@ -60,6 +85,8 @@ export default function FolioCard({ folio, onDelete }) {
             </button>
           </div>
         </div>
+
+        <RouteTracker origen={folio.origen} destino={folio.destino} />
 
         <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-3">
           {DATA_ROWS.map((row) => (
