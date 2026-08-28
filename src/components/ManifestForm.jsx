@@ -20,7 +20,7 @@ const RFC_PATTERN = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
 
 const FIELD_META = [
   { name: "containerName", label: "Nombre del contenedor", type: "text", placeholder: "Ej. MSCU 123456-7", span: 1 },
-  { name: "date", label: "Fecha", type: "date", span: 1 },
+  { name: "date", label: "Fecha de Salida", type: "date", span: 1 },
   { name: "company", label: "Nombre de la empresa", type: "text", placeholder: "Ej. Grupo Logístico del Bajío", span: 2 },
   { name: "contact", label: "Contacto", type: "text", placeholder: "Nombre de quien solicita", span: 1 },
   { name: "phone", label: "Teléfono", type: "tel", placeholder: "999 123 4567", span: 1 },
