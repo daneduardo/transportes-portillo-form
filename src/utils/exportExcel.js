@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 
 const COLUMNS = [
   "NUMERO DE CONTENEDOR",
@@ -45,6 +45,41 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
+const thinBorder = {
+  top: { style: "thin", color: { rgb: "000000" } },
+  bottom: { style: "thin", color: { rgb: "000000" } },
+  left: { style: "thin", color: { rgb: "000000" } },
+  right: { style: "thin", color: { rgb: "000000" } },
+};
+
+const headerStyle = {
+  font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11, name: "Calibri" },
+  fill: { fgColor: { rgb: "1F4E79" } },
+  alignment: { horizontal: "center", vertical: "center", wrapText: true },
+  border: thinBorder,
+};
+
+const cellStyle = {
+  border: thinBorder,
+  alignment: { vertical: "center" },
+};
+
+const COL_WIDTHS = [
+  { wch: 24 }, // NUMERO DE CONTENEDOR
+  { wch: 16 }, // FECHA SALIDA
+  { wch: 30 }, // CLIENTE/RAZON SOCIAL
+  { wch: 22 }, // NOMBRE CONTACTO
+  { wch: 18 }, // TELEFONO CONTACTO
+  { wch: 14 }, // DIAS CREDITO
+  { wch: 18 }, // ORIGEN
+  { wch: 18 }, // DESTINO
+  { wch: 20 }, // UNIDAD / PLACAS
+  { wch: 22 }, // OPERADOR
+  { wch: 18 }, // COSTO DE FLETE
+  { wch: 10 }, // FOLIO
+  { wch: 16 }, // FACTURA
+];
+
 export function exportToExcel(folios) {
   const data = [
     COLUMNS,
@@ -66,6 +101,19 @@ export function exportToExcel(folios) {
   ];
 
   const worksheet = XLSX.utils.aoa_to_sheet(data);
+
+  const range = XLSX.utils.decode_range(worksheet["!ref"]);
+  for (let r = range.s.r; r <= range.e.r; r++) {
+    for (let c = range.s.c; c <= range.e.c; c++) {
+      const cellRef = XLSX.utils.encode_cell({ r, c });
+      if (worksheet[cellRef]) {
+        worksheet[cellRef].s = r === 0 ? headerStyle : cellStyle;
+      }
+    }
+  }
+
+  worksheet["!cols"] = COL_WIDTHS;
+
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Manifiestos");
 
