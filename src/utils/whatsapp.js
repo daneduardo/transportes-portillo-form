@@ -1,3 +1,5 @@
+import { generateManifestPDF } from "./generatePDF";
+
 const WHATSAPP_NUMBER = "5215563179011";
 
 const currencyFormatter = new Intl.NumberFormat("es-MX", {
@@ -32,4 +34,36 @@ export function buildWhatsAppUrl(folio) {
   ].join("\n");
 
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+export async function shareManifestPDF(folio) {
+  const { blob, filename } = generateManifestPDF(folio);
+
+  const file = new File([blob], filename, { type: "application/pdf" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        files: [file],
+        title: `Manifiesto #${String(folio.folio).padStart(4, "0")}`,
+      });
+      return;
+    } catch (err) {
+      if (err.name === "AbortError") return;
+    }
+  }
+
+  downloadBlob(blob, filename);
+  window.open(buildWhatsAppUrl(folio), "_blank", "noopener,noreferrer");
 }
