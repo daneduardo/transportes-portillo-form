@@ -27,7 +27,7 @@ const DATA_ROWS = [
   { key: "term", label: "Plazo" },
 ];
 
-function FolioInfo({ folio, factura }) {
+function FolioInfo({ folio }) {
   return (
     <div className="mb-3 flex items-center gap-2">
       <span className="text-[10px] uppercase tracking-wider text-navy/60">
@@ -35,10 +35,6 @@ function FolioInfo({ folio, factura }) {
       </span>
       <span className="font-mono text-sm font-semibold">
         {String(folio).padStart(4, "0")}
-      </span>
-      <span className="mx-3 text-ink/60">|</span>
-      <span className="text-sm font-medium text-green-800">
-        {factura}
       </span>
     </div>
   );
@@ -72,7 +68,7 @@ export default function FolioCard({ folio, onDelete }) {
   return (
     <article className="folio-edge flex overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
       <div className="flex w-16 shrink-0 flex-col items-center justify-center gap-1 bg-navy py-4 pl-3 text-white sm:w-20">
-        <FolioInfo folio={folio.folio} factura={folio.factura} /></div>
+        <FolioInfo folio={folio.folio} /></div>
 
       <div className="flex-1 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-2">
@@ -122,6 +118,10 @@ export default function FolioCard({ folio, onDelete }) {
             </div>
           ))}
         </dl>
+
+        <div className="mt-4 border-t border-ink/10 pt-3 text-xs text-ink/50">
+          No de Factura: <span className="font-medium text-ink">{folio.factura}</span>
+        </div>
       </div>
     </article>
   );
