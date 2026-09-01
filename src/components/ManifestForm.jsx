@@ -20,12 +20,23 @@ const EMPTY_FORM = {
 
 const RFC_PATTERN = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
 
+const MEXICAN_STATES = [
+  "Aguascalientes", "Baja California", "Baja California Sur",
+  "Campeche", "Chiapas", "Chihuahua", "Ciudad de México",
+  "Coahuila", "Colima", "Durango", "Estado de México",
+  "Guanajuato", "Guerrero", "Hidalgo", "Jalisco",
+  "Michoacán", "Morelos", "Nayarit", "Nuevo León",
+  "Oaxaca", "Puebla", "Querétaro", "Quintana Roo",
+  "San Luis Potosí", "Sinaloa", "Sonora", "Tabasco",
+  "Tamaulipas", "Tlaxcala", "Veracruz", "Yucatán", "Zacatecas",
+];
+
 const FIELD_META = [
   { name: "containerName", label: "Nombre del contenedor", type: "text", placeholder: "Ej. MSCU 123456-7", span: 1 },
   { name: "date", label: "Fecha de Salida", type: "date", span: 1 },
   { name: "company", label: "Nombre de la empresa", type: "text", placeholder: "Ej. Grupo Logístico del Bajío", span: 2 },
-  { name: "origen", label: "Origen", type: "text", placeholder: "Ej. Ciudad de México", span: 1 },
-  { name: "destino", label: "Destino", type: "text", placeholder: "Ej. Monterrey, NL", span: 1 },
+  { name: "origen", label: "Origen", type: "select", span: 1 },
+  { name: "destino", label: "Destino", type: "select", span: 1 },
   { name: "contact", label: "Contacto", type: "text", placeholder: "Nombre de quien solicita", span: 1 },
   { name: "phone", label: "Teléfono", type: "tel", placeholder: "999 123 4567", span: 1 },
   { name: "plates", label: "Placas", type: "text", placeholder: "Ej. AB-123-C", span: 1 },
@@ -102,7 +113,26 @@ export default function ManifestForm({ onSave }) {
                   </span>
                 </label>
 
-                {field.name === "cost" ? (
+                {field.type === "select" ? (
+                  <select
+                    id={field.name}
+                    name={field.name}
+                    className={`select select-bordered w-full focus:border-brandgreen focus:outline focus:outline-2 focus:outline-brandgreen/40 ${
+                      showError ? "input-error" : ""
+                    }`}
+                    value={value}
+                    onChange={handleChange}
+                  >
+                    <option value="" disabled>
+                      Selecciona un estado
+                    </option>
+                    {MEXICAN_STATES.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                ) : field.name === "cost" ? (
                   <label
                     className={`input input-bordered flex w-full items-center gap-2 focus-within:border-brandgreen focus-within:outline focus-within:outline-2 focus-within:outline-brandgreen/40 ${
                       showError ? "input-error" : ""

@@ -4,6 +4,7 @@ import ManifestForm from "./components/ManifestForm";
 import FolioCard from "./components/FolioCard";
 import { loadFolios, saveFolios, nextFolioNumber, nextFacturaNumber } from "./utils/storage";
 import { exportToExcel } from "./utils/exportExcel";
+import { FaFileExcel } from "react-icons/fa";
 
 export default function App() {
   const [folios, setFolios] = useState([]);
@@ -59,6 +60,7 @@ export default function App() {
                 onClick={() => exportToExcel(folios)}
                 className="btn btn-ghost text-navy ml-2"
               >
+                <FaFileExcel className="h-4 w-4 text-green-600" />
                 Exportar a Excel
               </button>
             )}
