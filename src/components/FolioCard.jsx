@@ -24,6 +24,23 @@ const DATA_ROWS = [
   { key: "term", label: "Plazo" },
 ];
 
+function FolioInfo({ folio, factura }) {
+  return (
+    <div className="mb-3 flex items-center gap-2">
+      <span className="text-[10px] uppercase tracking-wider text-navy/60">
+        Folio
+      </span>
+      <span className="font-mono text-sm font-semibold">
+        {String(folio).padStart(4, "0")}
+      </span>
+      <span className="mx-3 text-ink/60">|</span>
+      <span className="text-sm font-medium text-green-800">
+        {factura}
+      </span>
+    </div>
+  );
+}
+
 function RouteTracker({ origen, destino }) {
   return (
     <div className="mt-4 flex items-center gap-3">
@@ -52,13 +69,7 @@ export default function FolioCard({ folio, onDelete }) {
   return (
     <article className="folio-edge flex overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
       <div className="flex w-16 shrink-0 flex-col items-center justify-center gap-1 bg-navy py-4 pl-3 text-white sm:w-20">
-        <span className="text-[10px] uppercase tracking-wider text-white/60">
-          Folio
-        </span>
-        <span className="font-mono text-lg font-semibold">
-          {String(folio.folio).padStart(4, "0")}
-        </span>
-      </div>
+        <FolioInfo folio={folio.folio} factura={folio.factura} /></div>
 
       <div className="flex-1 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-2">

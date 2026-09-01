@@ -24,3 +24,25 @@ export function nextFolioNumber(folios) {
   const highest = folios.reduce((max, f) => Math.max(max, f.folio || 0), 0);
   return highest + 1;
 }
+
+export function nextFacturaNumber(folios) {
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const year = String(today.getFullYear()).slice(-2);
+  const prefix = `${day}${month}${year}`;
+
+  const sameDayFolios = folios.filter(
+    (f) => f.factura && f.factura.startsWith(prefix)
+  );
+
+  if (sameDayFolios.length === 0) {
+    return `${prefix}001`;
+  }
+
+  const highest = sameDayFolios.reduce(
+    (max, f) => Math.max(max, Number(f.factura.slice(-3))), 0
+  );
+  const nextSeq = String(highest + 1).padStart(3, "0");
+  return `${prefix}${nextSeq}`;
+}

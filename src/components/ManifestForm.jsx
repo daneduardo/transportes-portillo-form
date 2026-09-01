@@ -1,6 +1,7 @@
 import { useState } from "react";
 import RouteDivider from "./RouteDivider";
 // import LocationAutocomplete from "./LocationAutocomplete"; // STANDBY: Google Places autocomplete for Origen/Destino (needs VITE_GOOGLE_MAPS_API_KEY)
+import { FaTimes } from "react-icons/fa";
 
 const EMPTY_FORM = {
   containerName: "",
@@ -37,7 +38,7 @@ const FIELD_META = [
 export default function ManifestForm({ onSave }) {
   const [form, setForm] = useState(EMPTY_FORM);
   const [touched, setTouched] = useState(false);
-  const [confirmation, setConfirmation] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -70,8 +71,8 @@ export default function ManifestForm({ onSave }) {
 
     setForm(EMPTY_FORM);
     setTouched(false);
-    setConfirmation(true);
-    window.setTimeout(() => setConfirmation(false), 3500);
+    setShowConfirmation(true);
+    window.setTimeout(() => setShowConfirmation(false), 3500);
   }
 
   function handleReset() {
@@ -148,16 +149,54 @@ export default function ManifestForm({ onSave }) {
           })}
         </div>
 
-        {confirmation && (
-          <div
-            role="status"
-            className="mt-6 flex items-center gap-2 rounded-lg bg-brandgreen/10 px-4 py-3 text-sm font-medium text-green-800"
+        {showConfirmation && (
+          <section
+            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
           >
-            <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 fill-brandgreen-dark" aria-hidden="true">
-              <path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z" />
-            </svg>
-            Manifiesto guardado correctamente.
-          </div>
+            <div
+              className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl transform transition-shadow hover:shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-display text-lg font-semibold uppercase tracking-wide text-navy">
+                  Manifiesto guardado
+                </h3>
+                <button
+                  onClick={() => setShowConfirmation(false)}
+                  className="text-ink/60 hover:text-ink flex items-center gap-1"
+                >
+                  <FaTimes className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="mb-4 p-4 rounded-xl bg-brandgreen/10">
+                <p className="font-medium text-ink">
+                  <span className="font-semibold">Folio:</span>{" "}
+                  <span className="font-mono text-lg">
+                    {form.folio || "0001"}
+                  </span>
+                </p>
+                <p className="font-medium text-ink mt-1">
+                  <span className="font-semibold">Factura:</span>{" "}
+                  <span className="font-mono text-lg">
+                    {form.factura || "310826001"}
+                  </span>
+                </p>
+              </div>
+
+              <p className="text-ink/60 text-sm mb-6">
+                El manifiesto ha sido guardado correctamente.
+              </p>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowConfirmation(false)}
+                  className="btn btn-ghost w-full"
+                >
+                  Aceptar
+                </button>
+              </div>
+            </div>
+          </section>
         )}
 
         <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">

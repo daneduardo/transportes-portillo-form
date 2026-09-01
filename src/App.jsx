@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import ManifestForm from "./components/ManifestForm";
 import FolioCard from "./components/FolioCard";
-import { loadFolios, saveFolios, nextFolioNumber } from "./utils/storage";
+import { loadFolios, saveFolios, nextFolioNumber, nextFacturaNumber } from "./utils/storage";
+import { exportToExcel } from "./utils/exportExcel";
 
 export default function App() {
   const [folios, setFolios] = useState([]);
@@ -23,6 +24,7 @@ export default function App() {
         ...entry,
         id: crypto.randomUUID(),
         folio: nextFolioNumber(prev),
+        factura: nextFacturaNumber(prev),
         createdAt: new Date().toISOString(),
       },
       ...prev,
@@ -52,6 +54,14 @@ export default function App() {
             <span className="text-sm text-ink/50">
               {folios.length} {folios.length === 1 ? "folio" : "folios"}
             </span>
+            {folios.length > 0 && (
+              <button
+                onClick={() => exportToExcel(folios)}
+                className="btn btn-ghost text-navy ml-2"
+              >
+                Exportar a Excel
+              </button>
+            )}
           </div>
 
           {sorted.length === 0 ? (
