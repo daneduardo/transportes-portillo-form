@@ -29,11 +29,11 @@ const DATA_ROWS = [
 
 function FolioInfo({ folio }) {
   return (
-    <div className="mb-3 flex items-center gap-2">
-      <span className="text-[10px] uppercase tracking-wider text-navy/60">
+    <div className="flex flex-col items-center gap-1">
+      <span className="text-[10px] uppercase tracking-wider text-white/60">
         Folio
       </span>
-      <span className="font-mono text-sm font-semibold">
+      <span className="font-mono text-lg font-bold">
         {String(folio).padStart(4, "0")}
       </span>
     </div>
