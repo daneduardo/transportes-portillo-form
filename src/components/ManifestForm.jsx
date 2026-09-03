@@ -21,9 +21,9 @@ const EMPTY_FORM = {
 const RFC_PATTERN = /^[A-ZÑ&]{3,4}\d{6}[A-Z0-9]{3}$/;
 
 const OPERATORS = [
-  "26BG5V - ROLANDO BAUTISTA",
-  "89BG9V - GERARDO REZENDIZ",
-  "37AX2C - DANIEL RAMIREZ",
+  { code: "26BG5V", name: "ROLANDO BAUTISTA" },
+  { code: "89BG9V", name: "GERARDO REZENDIZ" },
+  { code: "37AX2C", name: "DANIEL RAMIREZ" },
 ];
 
 const FIELD_META = [
@@ -48,10 +48,20 @@ export default function ManifestForm({ onSave }) {
 
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: name === "plates" || name === "rfc" ? value.toUpperCase() : value,
-    }));
+    setForm((prev) => {
+      const next = {
+        ...prev,
+        [name]: name === "plates" || name === "rfc" ? value.toUpperCase() : value,
+      };
+      if (name === "operator" && value) {
+        const match = OPERATORS.find((op) => op.name === value);
+        if (match) {
+          next.plates = match.code;
+          next.operator = match.name;
+        }
+      }
+      return next;
+    });
   }
 
   function isValid() {
@@ -122,8 +132,8 @@ export default function ManifestForm({ onSave }) {
                       Selecciona un operador
                     </option>
                     {OPERATORS.map((op) => (
-                      <option key={op} value={op}>
-                        {op}
+                      <option key={op.code} value={op.name}>
+                        {op.name}
                       </option>
                     ))}
                   </select>

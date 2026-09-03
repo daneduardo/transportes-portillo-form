@@ -31,6 +31,6 @@ export function nextFacturaNumber(folios) {
     .filter((f) => f.factura && !oldFormat.test(String(f.factura)))
     .map((f) => Number(f.factura))
     .filter((n) => Number.isFinite(n));
-  const highest = numericFacturas.reduce((max, n) => Math.max(max, n), 51);
+  const highest = numericFacturas.reduce((max, n) => Math.max(max, n), 52);
   return String(highest + 1);
 }
