@@ -1,5 +1,5 @@
 import { FaWhatsapp } from "react-icons/fa";
-import { shareManifestPDF } from "../utils/whatsapp";
+import { shareManifestText } from "../utils/whatsapp";
 
 const currencyFormatter = new Intl.NumberFormat("es-MX", {
   style: "currency",
@@ -84,7 +84,7 @@ export default function FolioCard({ folio, onDelete }) {
             </span>
             <button
               type="button"
-              onClick={() => shareManifestPDF(folio)}
+              onClick={() => shareManifestText(folio)}
               className="btn btn-ghost btn-sm btn-circle text-green-600 hover:bg-green-50"
               title="Enviar por WhatsApp"
               aria-label={`Enviar folio ${folio.folio} por WhatsApp`}
