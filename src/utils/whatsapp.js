@@ -2,10 +2,7 @@ import { generateManifestPDF } from "./generatePDF";
 
 const WHATSAPP_NUMBER = "5215563179011";
 
-const currencyFormatter = new Intl.NumberFormat("es-MX", {
-  style: "currency",
-  currency: "MXN",
-});
+const GOOGLE_MAPS_LINK = "https://maps.app.goo.gl/XXXXXX";
 
 function formatDate(isoDate) {
   if (!isoDate) return "—";
@@ -20,17 +17,12 @@ function formatDate(isoDate) {
 
 export function buildWhatsAppUrl(folio) {
   const msg = [
-    `\u{1F69B} *MANIFIESTO #${String(folio.folio).padStart(4, "0")}*`,
+    `\u{1F4E6} *Manifiesto de Envío*`,
     "",
-    `\u{1F4E6} Contenedor: ${folio.containerName}`,
-    `\u{1F4C5} Fecha salida: ${formatDate(folio.date)}`,
-    `\u{1F464} Cliente: ${folio.company}`,
-    `\u{1F4DE} Contacto: ${folio.contact} | ${folio.phone}`,
-    `\u{1F6E3}\uFE0F Ruta: ${folio.origen} \u2192 ${folio.destino}`,
-    `\u{1F697} Unidad: ${folio.plates}`,
-    `\u{1F468}\u200D\u{1F3A4} Operador: ${folio.operator}`,
-    `\u{1F4B0} Costo: ${currencyFormatter.format(folio.cost)}`,
-    `\u{1F4C4} Folio: ${String(folio.folio).padStart(4, "0")} | Factura: ${folio.factura}`,
+    `\u{1F4C4} Folio: ${String(folio.folio).padStart(4, "0")}`,
+    `\u{1F4B3} Factura: ${folio.factura}`,
+    `\u{1F4CD} Dirección de envío: ${folio.destino}`,
+    `\u{1F5FA}\uFE0F Ubicación: ${GOOGLE_MAPS_LINK}`,
   ].join("\n");
 
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
