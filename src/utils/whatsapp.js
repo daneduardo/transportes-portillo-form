@@ -39,23 +39,8 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
-export async function shareManifestPDF(folio) {
+export function shareManifestPDF(folio) {
   const { blob, filename } = generateManifestPDF(folio);
-
-  const file = new File([blob], filename, { type: "application/pdf" });
-
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({
-        files: [file],
-        title: `Manifiesto #${String(folio.folio).padStart(4, "0")}`,
-      });
-      return;
-    } catch (err) {
-      if (err.name === "AbortError") return;
-    }
-  }
-
   downloadBlob(blob, filename);
   window.open(buildWhatsAppUrl(folio), "_blank", "noopener,noreferrer");
 }
