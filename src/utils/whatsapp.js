@@ -2,21 +2,10 @@ import { generateManifestPDF } from "./generatePDF";
 
 const WHATSAPP_NUMBER = "5215563179011";
 
-const GOOGLE_MAPS_LINK = "https://maps.app.goo.gl/XXXXXX";
+const GOOGLE_MAPS_LINK = "https://maps.app.goo.gl/jq4xrTgDrZkaS6kAA";
 
-function formatDate(isoDate) {
-  if (!isoDate) return "—";
-  const [year, month, day] = isoDate.split("-");
-  const d = new Date(Number(year), Number(month) - 1, Number(day));
-  return d.toLocaleDateString("es-MX", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-export function buildWhatsAppUrl(folio) {
-  const msg = [
+function buildWhatsAppMessage(folio) {
+  return [
     `\u{1F4E6} *Manifiesto de Envío*`,
     "",
     `\u{1F4C4} Folio: ${String(folio.folio).padStart(4, "0")}`,
@@ -24,8 +13,10 @@ export function buildWhatsAppUrl(folio) {
     `\u{1F4CD} Dirección de envío: ${folio.destino}`,
     `\u{1F5FA}\uFE0F Ubicación: ${GOOGLE_MAPS_LINK}`,
   ].join("\n");
+}
 
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+export function buildWhatsAppUrl(folio) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(buildWhatsAppMessage(folio))}`;
 }
 
 function downloadBlob(blob, filename) {
@@ -39,8 +30,23 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
-export function shareManifestPDF(folio) {
+export async function shareManifestPDF(folio) {
   const { blob, filename } = generateManifestPDF(folio);
+  const file = new File([blob], filename, { type: "application/pdf" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({
+        files: [file],
+        text: buildWhatsAppMessage(folio),
+      });
+      return;
+    } catch (err) {
+      if (err.name === "AbortError") return;
+      console.error("No se pudo compartir el archivo:", err);
+    }
+  }
+
   downloadBlob(blob, filename);
   window.open(buildWhatsAppUrl(folio), "_blank", "noopener,noreferrer");
 }
